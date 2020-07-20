@@ -411,10 +411,10 @@
     <script src="js/global.script.js"></script>
 
     <script>
-      var jwtToken = sessionStorage.getItem("ourtoken");
+      var jwtToken = sessionStorage.getItem("ourToken");
       console.log(jwtToken);
       if (jwtToken == "") {
-        alert("로근해주세요");
+        alert("로그인해주세요");
         window.location.href = "/login";
       }
       fetchUserData();
