@@ -208,7 +208,15 @@
         <!-- Header area end -->
         <!-- Page content start -->
         <main>
-          <div class="container"></div>
+          <div class="container">
+            <video id="preview"></video>
+            <button
+              class="button circle darkblue block"
+              data-popup="largePopup"
+            >
+              Large Popup
+            </button>
+          </div>
 
           <div class="form-divider"></div>
 
@@ -236,6 +244,33 @@
       </div>
     </div>
 
+    <div class="popup-overlay" id="largePopup">
+      <!-- if you dont want overlay add class .no-overlay -->
+      <div class="popup-container">
+        <div class="popup-header">
+          <h3 class="popup-title">결제 금액 / 계좌 선택</h3>
+          <span class="popup-close" data-dismiss="true"
+            ><i class="fa fa-times"></i
+          ></span>
+        </div>
+        <div class="popup-content">
+          결제금액 : <input type="text" id="amount" /> 원
+          <table>
+            <thead>
+              <th>번호</th>
+              <th>계좌별명</th>
+              <th>결제 버튼</th>
+            </thead>
+            <tbody id="accountList"></tbody>
+          </table>
+        </div>
+        <div class="popup-footer">
+          <button class="button orange">Save</button>
+          <button class="button" data-dismiss="true">Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <!--Page loader DOM Elements. Requared all pages-->
     <div class="sweet-loader">
       <div class="box">
@@ -248,7 +283,7 @@
     <script src="js/jquery-3.2.1.min.js"></script>
     <!-- Template global script file. requared all pages -->
     <script src="js/global.script.js"></script>
-    <script srd="js/instance.min.js"></script>
+    <script src="js/instascan.min.js"></script>
     <script>
       function getQueryStringObject() {
         var a = window.location.search.substr(1).split("&");
@@ -267,6 +302,60 @@
       }
       var jwtToken = sessionStorage.getItem("ourToken");
       console.log(qs, jwtToken);
+      let scanner = new Instascan.Scanner({
+        video: document.getElementById("preview"),
+      });
+      scanner.addListener("scan", function (content) {
+        console.log(content);
+        $("#largePopup").show();
+        $.ajax({
+          url: "/list",
+          type: "POST",
+          headers: {
+            ourtoken: jwtToken,
+          },
+          success: function (data) {
+            console.log(data.res_list);
+            for (var i = 0; i < data.res_list.length; i++) {
+              var element = data.res_list[i];
+              console.log(element);
+              $("#accountList").append(
+                "<tr><td>" +
+                  (i + 1) +
+                  "</td><td>" +
+                  element.account_alias +
+                  "</td><td>" +
+                  "<button>결제하기</button>" +
+                  "</td></tr>"
+              );
+            }
+          },
+        });
+        // $.ajax({
+        //   url: "/withdraw",
+        //   type: "POST",
+        //   headers: {
+        //     ourtoken: jwtToken,
+        //   },
+        //   data: {
+        //     fin_use_num: "199159919057870971744807",
+        //   },
+        //   success: function (data) {
+        //     console.log(data);
+        //   },
+        // });
+      });
+      Instascan.Camera.getCameras()
+        .then(function (cameras) {
+          if (cameras.length > 0) {
+            scanner.start(cameras[0]);
+          } else {
+            console.error("No cameras found.");
+          }
+        })
+        .catch(function (e) {
+          console.error(e);
+        });
     </script>
   </body>
 </html>
