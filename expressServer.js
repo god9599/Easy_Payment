@@ -9,7 +9,7 @@ var mysql = require("mysql");
 var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "qjelqjel01!",
+  password: "password",
   database: "fintech",
 });
 
@@ -66,7 +66,7 @@ app.get("/authResult", function (req, res) {
     form: {
       code: authCode,
       client_id: "cWqAADbtseaxlv619vslm8mw2l5pRSj7Zb7G5w64",
-      client_secret: "j6aN0f6CFeX3HbfgVXHq10oQ0o6MOf44Hxq8lv9O",
+      client_secret: "secret_key",
       redirect_uri: "http://localhost:3000/authResult",
       grant_type: "authorization_code",
       //#자기 키로 시크릿 변경
@@ -186,7 +186,7 @@ app.post("/balance", auth, function (req, res) {
 
   console.log("유저 아이디, 핀테크번호 : ", userId, fin_use_num);
   var countnum = Math.floor(Math.random() * 1000000000) + 1;
-  var transId = "T991599190U" + countnum; //이용기과번호 본인것 입력
+  var transId = "T991641460U" + countnum; //이용기과번호 본인것 입력
 
   var sql = "SELECT * FROM user WHERE id = ?";
   connection.query(sql, [userId], function (err, results) {
@@ -210,7 +210,7 @@ app.post("/balance", auth, function (req, res) {
           //#자기 키로 시크릿 변경
         },
       };
-      request(option, function (error, response, body) {
+      request(option, function (error, response, body) { 
         var balanceResult = JSON.parse(body);
         console.log(balanceResult);
         res.json(balanceResult);
@@ -221,11 +221,11 @@ app.post("/balance", auth, function (req, res) {
 
 app.post("/transactionList", auth, function (req, res) {
   var userId = req.decoded.userId;
-  var fin_use_num = req.body.fin_use_num;
+  var fin_use_num = req.body.fin_use_num;ss
   console.log("유저 아이디, 핀테크번호 : ", userId, fin_use_num);
 
   var countnum = Math.floor(Math.random() * 1000000000) + 1;
-  var transId = "T991599190U" + countnum; //이용기과번호 본인것 입력 *****************************
+  var transId = "T991641460U" + countnum; //이용기과번호 본인것 입력 *****************************
 
   var sql = "SELECT * FROM user WHERE id = ?";
   connection.query(sql, [userId], function (err, results) {
@@ -273,7 +273,7 @@ app.post("/withdraw", auth, function (req, res) {
   console.log("유저 아이디, 핀테크번호 : ", userId, fin_use_num);
 
   var countnum = Math.floor(Math.random() * 1000000000) + 1;
-  var transId = "T991599190U" + countnum; //이용기과번호 본인것 입력
+  var transId = "T991641460U" + countnum; //이용기과번호 본인것 입력
 
   var sql = "SELECT * FROM user WHERE id = ?";
   connection.query(sql, [userId], function (err, results) {
@@ -330,7 +330,7 @@ app.post("/withdraw", auth, function (req, res) {
   );
 
   var countnum = Math.floor(Math.random() * 1000000000) + 1;
-  var transId = "T991599190U" + countnum; //이용기과번호 본인것 입력
+  var transId = "T991641460U" + countnum; //이용기과번호 본인것 입력
 
   var sql = "SELECT * FROM user WHERE id = ?";
   connection.query(sql, [userId], function (err, results) {
